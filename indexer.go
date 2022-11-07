@@ -12,8 +12,8 @@ type Tileset struct {
 	Properties        *Properties `json:"properties,omitempty"`
 	GeometricError    float64     `json:"geometricError"`
 	Root              Tile        `json:"root"`
-	ExtenstionsUsed   []string   `json:"extensionsUsed,omitempty"`
-	ExtensionRequired []string   `json:"extensionsRequired,omitempty"`
+	ExtenstionsUsed   []string    `json:"extensionsUsed,omitempty"`
+	ExtensionRequired []string    `json:"extensionsRequired,omitempty"`
 	Extentions        *Extention  `json:"extensions,omitempty"`
 	Extras            *Extras     `json:"extras,omitempty"`
 }
@@ -32,9 +32,9 @@ type Tile struct {
 	ViewerRequestVolume *BoundingVolume `josn:"viewerRequestVolume,omitempty"`
 	GeometricError      float64         `json:"geometricError"`
 	Refine              *string         `json:"refine,omitempty"`
-	Transform           [16]int        `json:"transform,omitempty"`
+	Transform           [16]int         `json:"transform,omitempty"`
 	Content             *Content        `json:"content,omitempty"`
-	Children            []Tile         `json:"children,omitempty"`
+	Children            []Tile          `json:"children,omitempty"`
 	Extentions          *Extention      `json:"extensions,omitempty"`
 	Extras              *Extras         `json:"extras,omitempty"`
 }
@@ -43,8 +43,8 @@ type BoundingVolume struct {
 	Box        [12]float64 `json:"box,omitempty"`
 	Region     [6]float64  `json:"region,omitempty"`
 	Sphere     [4]float64  `json:"sphere,omitempty"`
-	Extentions *Extention   `json:"extension,omitempty"`
-	Extras     *Extras      `json:"extras,omitempty"`
+	Extentions *Extention  `json:"extension,omitempty"`
+	Extras     *Extras     `json:"extras,omitempty"`
 }
 
 type Content struct {
@@ -69,43 +69,33 @@ type IndexConfig struct {
 	Kind string `json:"kind"`
 }
 
-func ParseIndexConfig(indexConfigFile string) IndexesConfig {
-	fmt.Println(indexConfigFile)
-	jsonFile, err := os.Open(indexConfigFile)
+func openJSONFile(fileName string) []byte {
+	fmt.Println(fileName)
+	jsonFile, err := os.Open(fileName)
 	// if we os.Open returns an error then handle it
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("Successfully Opened ", indexConfigFile)
+	fmt.Println("Successfully Opened ", fileName)
 	// defer the closing of our jsonFile so that we can parse it later on
 	defer jsonFile.Close()
 
 	byteValue, _ := io.ReadAll(jsonFile)
 
-	var indexConfig IndexesConfig
+	return byteValue
+}
 
-	// var result map[string]interface{}
+func ParseIndexConfig(indexConfigFile string) IndexesConfig {
+	var indexConfig IndexesConfig
+	byteValue := openJSONFile(indexConfigFile)
 	json.Unmarshal([]byte(byteValue), &indexConfig)
 
 	return indexConfig
 }
 
 func ParseTilesetFile(tilesetFile string) Tileset {
-	// Open our jsonFile
-	jsonFile, err := os.Open(tilesetFile)
-	// if we os.Open returns an error then handle it
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("Successfully Opened ", tilesetFile)
-	// defer the closing of our jsonFile so that we can parse it later on
-	defer jsonFile.Close()
-
-	byteValue, _ := io.ReadAll(jsonFile)
-
 	var tileset Tileset
-
-	// var result map[string]interface{}
+	byteValue := openJSONFile(tilesetFile)
 	json.Unmarshal([]byte(byteValue), &tileset)
 
 	return tileset
