@@ -90,42 +90,43 @@ func readJSONFile(fileName string) ([]byte, error) {
 	return byteValue, nil
 }
 
-func ParseIndexConfig(indexConfigFile string) (IndexesConfig, error) {
-	var indexConfig IndexesConfig
-	byteValue, err := readJSONFile(indexConfigFile)
+func parseJSONFile[T any](fileName string, data T) (T, error) {
+	var zero T
+	byteValue, err := readJSONFile(fileName)
 	if err != nil {
-		return IndexesConfig{}, errors.Wrap(err, "could not read config")
+		return zero, errors.Wrap(err, "could not read config")
 	}
 
-	errUnmarshal := json.Unmarshal([]byte(byteValue), &indexConfig)
+	errUnmarshal := json.Unmarshal([]byte(byteValue), &data)
 	if errUnmarshal != nil {
-		return IndexesConfig{}, errors.Wrap(errUnmarshal, "could not unmarshal the json")
+		return zero, errors.Wrap(errUnmarshal, "could not unmarshal the json")
 	}
 
-	return indexConfig, nil
+	return data, nil
 }
 
-func ParseTilesetFile(tilesetFile string) (Tileset, error) {
-	var tileset Tileset
-	byteValue, err := readJSONFile(tilesetFile)
-	if err != nil {
-		return Tileset{}, errors.Wrap(err, "could not read tileset.json")
-	}
+func ParseTilesetFile(fileName string) (Tileset, error) {
+	return parseJSONFile(fileName, Tileset{})
+}
 
-	errUnmarshal := json.Unmarshal([]byte(byteValue), &tileset)
-	if errUnmarshal != nil {
-		return Tileset{}, errors.Wrap(errUnmarshal, "could not unmarshal the json")
-	}
-
-	return tileset, nil
+func ParseIndexerConfigFile(fileName string) (IndexesConfig, error) {
+	return parseJSONFile(fileName, IndexesConfig{})
 }
 
 func main() {
 
-	tilesetFile := "tileset.json"
-	tileset, _ := ParseTilesetFile(tilesetFile)
-	indexConfigFile := "3dtiles-config.json"
-	indexesConfig, _ := ParseIndexConfig(indexConfigFile)
+	tilesetFile := "example/tileset.json"
+	tileset, err := ParseTilesetFile(tilesetFile)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	indexConfigFile := "example/3dtiles-config.json"
+	indexesConfig, err := ParseIndexerConfigFile(indexConfigFile)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	fmt.Println("Tileset: ", tileset)
 	fmt.Println("IndexesConfig: ", indexesConfig)
