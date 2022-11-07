@@ -6,6 +6,7 @@ import (
 	"github.com/pkg/errors"
 	"io"
 	"os"
+	"path/filepath"
 )
 
 type Tileset struct {
@@ -130,5 +131,8 @@ func main() {
 
 	fmt.Println("Tileset: ", tileset)
 	fmt.Println("IndexesConfig: ", indexesConfig)
+
+	tilesetDir := filepath.Dir(tilesetFile)
+	fmt.Println("TilesetDir: ", tilesetDir)
 
 }
