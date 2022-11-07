@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/pkg/errors"
 	"io"
 	"os"
 )
@@ -69,44 +70,62 @@ type IndexConfig struct {
 	Kind string `json:"kind"`
 }
 
-func openJSONFile(fileName string) []byte {
+func readJSONFile(fileName string) ([]byte, error) {
 	fmt.Println(fileName)
 	jsonFile, err := os.Open(fileName)
 	// if we os.Open returns an error then handle it
 	if err != nil {
-		fmt.Println(err)
+		return nil, errors.Wrap(err, "open failed")
 	}
 	fmt.Println("Successfully Opened ", fileName)
 	// defer the closing of our jsonFile so that we can parse it later on
 	defer jsonFile.Close()
 
-	byteValue, _ := io.ReadAll(jsonFile)
+	byteValue, err := io.ReadAll(jsonFile)
 
-	return byteValue
+	if err != nil {
+		return nil, errors.Wrap(err, "read failed")
+	}
+
+	return byteValue, nil
 }
 
-func ParseIndexConfig(indexConfigFile string) IndexesConfig {
+func ParseIndexConfig(indexConfigFile string) (IndexesConfig, error) {
 	var indexConfig IndexesConfig
-	byteValue := openJSONFile(indexConfigFile)
-	json.Unmarshal([]byte(byteValue), &indexConfig)
+	byteValue, err := readJSONFile(indexConfigFile)
+	if err != nil {
+		return IndexesConfig{}, errors.Wrap(err, "could not read config")
+	}
 
-	return indexConfig
+	errUnmarshal := json.Unmarshal([]byte(byteValue), &indexConfig)
+	if errUnmarshal != nil {
+		return IndexesConfig{}, errors.Wrap(errUnmarshal, "could not unmarshal the json")
+	}
+
+	return indexConfig, nil
 }
 
-func ParseTilesetFile(tilesetFile string) Tileset {
+func ParseTilesetFile(tilesetFile string) (Tileset, error) {
 	var tileset Tileset
-	byteValue := openJSONFile(tilesetFile)
-	json.Unmarshal([]byte(byteValue), &tileset)
+	byteValue, err := readJSONFile(tilesetFile)
+	if err != nil {
+		return Tileset{}, errors.Wrap(err, "could not read tileset.json")
+	}
 
-	return tileset
+	errUnmarshal := json.Unmarshal([]byte(byteValue), &tileset)
+	if errUnmarshal != nil {
+		return Tileset{}, errors.Wrap(errUnmarshal, "could not unmarshal the json")
+	}
+
+	return tileset, nil
 }
 
 func main() {
 
 	tilesetFile := "tileset.json"
-	tileset := ParseTilesetFile(tilesetFile)
+	tileset, _ := ParseTilesetFile(tilesetFile)
 	indexConfigFile := "3dtiles-config.json"
-	indexesConfig := ParseIndexConfig(indexConfigFile)
+	indexesConfig, _ := ParseIndexConfig(indexConfigFile)
 
 	fmt.Println("Tileset: ", tileset)
 	fmt.Println("IndexesConfig: ", indexesConfig)
