@@ -24,6 +24,7 @@ type Schema struct {
 type Asset struct {
 	Version        string                  `json:"version"`
 	TilesetVersion *string                 `json:"tileSetVersion,omitempty"`
+	GltfUpAxis     string                  `json:"gltfUpAxis,omitempty"`
 	Extentions     *map[string]interface{} `json:"extensions,omitempty"`
 	Extras         *interface{}            `json:"extras,omitempty"`
 }
