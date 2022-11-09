@@ -8,15 +8,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-const (
-	TILE_REFINE_ADD     = "ADD"
-	TILE_REFINE_REPLACE = "REPLACE"
-)
-
-var (
-	TileDefaultTransform = [16]float64{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0}
-)
-
 type Schema struct {
 	Maximum float64 `json:"maximum,omitempty"`
 	Minimum float64 `json:"minimum,omitempty"`
