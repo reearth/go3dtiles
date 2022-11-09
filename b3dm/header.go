@@ -1,4 +1,4 @@
-package indexer
+package b3dm
 
 type Header interface {
 	CalcSize() int64

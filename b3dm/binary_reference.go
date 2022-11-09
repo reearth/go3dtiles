@@ -1,4 +1,4 @@
-package indexer
+package b3dm
 
 const (
 	COMPONENT_TYPE_BYTE           = "BYTE"

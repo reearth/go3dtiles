@@ -1,4 +1,4 @@
-package indexer
+package b3dm
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 )
 
 func TestReadb3dm(t *testing.T) {
-	f, err := os.Open("example/data/data1.b3dm")
+	f, err := os.Open("../example/data/data1.b3dm")
 	if err != nil {
 		t.Errorf("failed to open the b3dm file")
 	}

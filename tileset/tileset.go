@@ -1,4 +1,4 @@
-package indexer
+package tileset
 
 import (
 	"encoding/json"

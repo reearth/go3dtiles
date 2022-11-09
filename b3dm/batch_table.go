@@ -1,4 +1,4 @@
-package indexer
+package b3dm
 
 import (
 	"bytes"

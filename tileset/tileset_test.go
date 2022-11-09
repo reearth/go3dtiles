@@ -1,4 +1,4 @@
-package indexer
+package tileset
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 )
 
 func TestParseTilesetFile(t *testing.T) {
-	tileset, err := ParseTilesetFile("example/tileset.json")
+	tileset, err := ParseTilesetFile("../example/tileset.json")
 	fmt.Println(tileset)
 
 	if err != nil {
