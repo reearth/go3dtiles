@@ -73,7 +73,7 @@ func (ts *Tileset) ToJson() (string, error) {
 	return string(b), errors.Wrap(e, "failed to convert tileset to JSON")
 }
 
-func TilesetFromJson(data io.Reader) *Tileset {
+func tilesetFromJson(data io.Reader) *Tileset {
 	var ts *Tileset
 	json.NewDecoder(data).Decode(&ts)
 	return ts
@@ -84,5 +84,5 @@ func ParseTilesetFile(fileName string) (*Tileset, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "open failed")
 	}
-	return TilesetFromJson(jsonFile), nil
+	return tilesetFromJson(jsonFile), nil
 }
