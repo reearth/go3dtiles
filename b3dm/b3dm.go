@@ -23,7 +23,7 @@ type B3dmHeader struct {
 	BatchTableBinaryByteLength   uint32
 }
 
-func (h *B3dmHeader) CalcSize() int64 {
+func (h *B3dmHeader) GetSize() int64 {
 	return 28
 }
 
