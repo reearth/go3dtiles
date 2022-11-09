@@ -51,7 +51,7 @@ type Tile struct {
 
 type Tileset struct {
 	Asset             Asset                   `json:"asset"`
-	Properties        *map[string]Schema     `json:"properties,omitempty"`
+	Properties        *map[string]Schema      `json:"properties,omitempty"`
 	GeometricError    float64                 `json:"geometricError"`
 	Root              Tile                    `json:"root"`
 	ExtenstionsUsed   []string                `json:"extensionsUsed,omitempty"`
