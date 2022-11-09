@@ -7,8 +7,15 @@ import (
 )
 
 func TestReadb3dm(t *testing.T) {
-	f, _ := os.Open("example/data/data1.b3dm")
+	f, err := os.Open("example/data/data1.b3dm")
+	if err != nil {
+		t.Errorf("failed to open the b3dm file")
+	}
+	
 	b3d := &B3dm{}
-	b3d.Read(f)
+	err1 := b3d.Read(f)
+	if err1 != nil {
+		t.Errorf("failed to open the b3dm file")
+	}
 	fmt.Println(b3d)
 }
