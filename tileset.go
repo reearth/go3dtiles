@@ -2,9 +2,10 @@ package indexer
 
 import (
 	"encoding/json"
-	"github.com/pkg/errors"
 	"io"
 	"os"
+
+	"github.com/pkg/errors"
 )
 
 const (
