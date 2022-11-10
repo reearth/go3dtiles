@@ -2,7 +2,6 @@ package tileset
 
 import (
 	"encoding/json"
-	"io"
 	"os"
 
 	"github.com/pkg/errors"
@@ -65,16 +64,15 @@ func (ts *Tileset) ToJson() (string, error) {
 	return string(b), errors.Wrap(e, "failed to convert tileset to JSON")
 }
 
-func tilesetFromJson(data io.Reader) *Tileset {
-	var ts *Tileset
-	json.NewDecoder(data).Decode(&ts)
-	return ts
-}
-
-func ParseTilesetFile(fileName string) (*Tileset, error) {
+func Open(fileName string) (*Tileset, error) {
 	jsonFile, err := os.Open(fileName)
 	if err != nil {
 		return nil, errors.Wrap(err, "open failed")
 	}
-	return tilesetFromJson(jsonFile), nil
+	
+	var ts *Tileset
+	if err = json.NewDecoder(jsonFile).Decode(&ts); err != nil {
+		return nil, errors.Wrap(err, "failed to decode the tileset file")
+	}
+	return ts, nil
 }
