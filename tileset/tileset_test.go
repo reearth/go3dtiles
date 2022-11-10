@@ -6,7 +6,7 @@ import (
 )
 
 func TestParseTilesetFile(t *testing.T) {
-	tileset, err := ParseTilesetFile("../example/tileset.json")
+	tileset, err := ParseTilesetFile("tileset_testdata/tileset.json")
 	fmt.Println(tileset)
 
 	if err != nil {
