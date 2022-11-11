@@ -3,6 +3,7 @@ package b3dm
 import (
 	"encoding/binary"
 	"io"
+	"os"
 
 	"github.com/pkg/errors"
 	"github.com/qmuntal/gltf"
@@ -92,27 +93,53 @@ func (m *B3dm) GetBatchTable() *BatchTable {
 	return &m.BatchTable
 }
 
-func (m *B3dm) Read(reader io.ReadSeeker) error {
+type B3dmReader struct {
+	rs io.ReadSeeker
+}
 
-	err := binary.Read(reader, littleEndian, &m.Header)
-	if err != nil {
+func NewB3dmReader(r io.ReadSeeker) *B3dmReader {
+	return &B3dmReader{rs: r}
+}
+
+func (r *B3dmReader) DecodeHeader(d *B3dmHeader) error {
+	if err := binary.Read(r.rs, littleEndian, d); err != nil {
 		return errors.Wrap(err, "open failed for b3dm file")
 	}
+	return nil
+}
+
+func (r *B3dmReader) Decode(m *B3dm) error {
+	r.DecodeHeader(&m.Header)
 
 	m.FeatureTable.decode = B3dmFeatureTableDecode
 
-	if err := m.FeatureTable.Read(reader, m.GetHeader()); err != nil {
+	if err := m.FeatureTable.Read(r.rs, m.GetHeader()); err != nil {
 		return errors.Wrap(err, "failed to read FeatureTable")
 	}
 
-	if err := m.BatchTable.Read(reader, m.GetHeader(), m.FeatureTable.GetBatchLength()); err != nil {
+	if err := m.BatchTable.Read(r.rs, m.GetHeader(), m.FeatureTable.GetBatchLength()); err != nil {
 		return errors.Wrap(err, "failed to read BatchTable")
 	}
 
 	var err1 error
-	if m.Model, err1 = loadGltfFromByte(reader); err1 != nil {
-		return errors.Wrap(err1, "failed to load glTF file for the given b3dm")
+	if m.Model, err1 = loadGltfFromByte(r.rs); err1 != nil {
+		return errors.Wrap(err1, "failed to load glTF file")
 	}
 
 	return nil
+}
+
+// Open will open a b3dm file specified by name and return the B3dm.
+func Open(fileName string) (*B3dm, error) {
+	f, err := os.Open(fileName)
+	if err != nil {
+		return nil, errors.Wrap(err, "open failed")
+	}
+	defer f.Close()
+	b3dmReader := NewB3dmReader(f)
+	b3d := new(B3dm)
+	if err := b3dmReader.Decode(b3d); err != nil {
+		return nil, errors.Wrap(err, "failed to decode the b3dm file")
+	}
+	return b3d, nil
 }
