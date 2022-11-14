@@ -16,9 +16,32 @@ const (
 	REF_PROP_COMPONENT_TYPE = "componentType"
 )
 
+const (
+	CONTAINER_TYPE_SCALAR = "SCALAR"
+	CONTAINER_TYPE_VEC2   = "VEC2"
+	CONTAINER_TYPE_VEC3   = "VEC3"
+	CONTAINER_TYPE_VEC4   = "VEC4"
+)
+
+func ContainerTypeSize(tp string) int {
+	switch tp {
+	case CONTAINER_TYPE_SCALAR:
+		return 1
+	case CONTAINER_TYPE_VEC2:
+		return 2
+	case CONTAINER_TYPE_VEC3:
+		return 3
+	case CONTAINER_TYPE_VEC4:
+		return 4
+	default:
+		return 0
+	}
+}
+
 type BinaryBodyReference struct {
 	ByteOffset    uint32 `json:"byteOffset"`
 	ComponentType string `json:"componentType,omitempty"`
+	ContainerType string `json:"type,omitempty"`
 }
 
 func (r *BinaryBodyReference) FromMap(d map[string]interface{}) {
