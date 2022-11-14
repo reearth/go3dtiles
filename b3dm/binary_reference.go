@@ -14,6 +14,7 @@ const (
 const (
 	REF_PROP_BYTE_OFFSET    = "byteOffset"
 	REF_PROP_COMPONENT_TYPE = "componentType"
+	REF_PROP_TYPE           = "type"
 )
 
 const (
@@ -50,6 +51,9 @@ func (r *BinaryBodyReference) FromMap(d map[string]interface{}) {
 	}
 	if d[REF_PROP_COMPONENT_TYPE] != nil {
 		r.ComponentType = d[REF_PROP_COMPONENT_TYPE].(string)
+	}
+	if d[REF_PROP_TYPE] != nil {
+		r.ContainerType = d[REF_PROP_TYPE].(string)
 	}
 }
 
