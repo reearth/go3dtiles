@@ -1,4 +1,4 @@
-module github.com/reearth/cesium3dtiles-go
+module github.com/reearth/go3dtiles
 
 go 1.19
 
