@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	TESTFILE_LL_B3DM     = "b3dm_testdata/ll.b3dm"
-	TESTFILE_PARENT_B3DM = "b3dm_testdata/parent.b3dm"
+	TESTFILE_LL_B3DM     = "testdata/ll.b3dm"
+	TESTFILE_PARENT_B3DM = "testdata/parent.b3dm"
 )
 
 func TestOpen(t *testing.T) {
