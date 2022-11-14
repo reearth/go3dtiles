@@ -8,8 +8,8 @@ import (
 )
 
 type Schema struct {
-	Maximum float64 `json:"maximum,omitempty"`
-	Minimum float64 `json:"minimum,omitempty"`
+	Maximum *float64 `json:"maximum,omitempty"`
+	Minimum *float64 `json:"minimum,omitempty"`
 }
 
 type Asset struct {
@@ -21,9 +21,9 @@ type Asset struct {
 }
 
 type BoundingVolume struct {
-	Box        [12]float64             `json:"box,omitempty"`
-	Region     [6]float64              `json:"region,omitempty"`
-	Sphere     [4]float64              `json:"sphere,omitempty"`
+	Box        *[12]float64            `json:"box,omitempty"`
+	Region     *[6]float64             `json:"region,omitempty"`
+	Sphere     *[4]float64             `json:"sphere,omitempty"`
 	Extentions *map[string]interface{} `json:"extension,omitempty"`
 	Extras     *interface{}            `json:"extras,omitempty"`
 }
@@ -41,9 +41,9 @@ type Tile struct {
 	ViewerRequestVolume *BoundingVolume         `josn:"viewerRequestVolume,omitempty"`
 	GeometricError      float64                 `json:"geometricError"`
 	Refine              *string                 `json:"refine,omitempty"`
-	Transform           [16]float64             `json:"transform,omitempty"`
+	Transform           *[16]float64            `json:"transform,omitempty"`
 	Content             *Content                `json:"content,omitempty"`
-	Children            []Tile                  `json:"children,omitempty"`
+	Children            *[]Tile                 `json:"children,omitempty"`
 	Extentions          *map[string]interface{} `json:"extensions,omitempty"`
 	Extras              *interface{}            `json:"extras,omitempty"`
 }
@@ -53,8 +53,8 @@ type Tileset struct {
 	Properties        *map[string]Schema      `json:"properties,omitempty"`
 	GeometricError    float64                 `json:"geometricError"`
 	Root              Tile                    `json:"root"`
-	ExtenstionsUsed   []string                `json:"extensionsUsed,omitempty"`
-	ExtensionRequired []string                `json:"extensionsRequired,omitempty"`
+	ExtenstionsUsed   *[]string               `json:"extensionsUsed,omitempty"`
+	ExtensionRequired *[]string               `json:"extensionsRequired,omitempty"`
 	Extentions        *map[string]interface{} `json:"extensions,omitempty"`
 	Extras            *interface{}            `json:"extras,omitempty"`
 }
@@ -69,7 +69,7 @@ func Open(fileName string) (*Tileset, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "open failed")
 	}
-	
+
 	var ts *Tileset
 	if err = json.NewDecoder(jsonFile).Decode(&ts); err != nil {
 		return nil, errors.Wrap(err, "failed to decode the tileset file")
