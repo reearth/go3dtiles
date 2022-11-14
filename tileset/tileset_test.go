@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const TESTFILE_TILESET = "tileset_testdata/tileset.json"
+const TESTFILE_TILESET = "testdata/tileset.json"
 
 func TestOpen(t *testing.T) {
 	tests := []struct {
