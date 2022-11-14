@@ -23,7 +23,7 @@ func (t *BatchTable) readJSONHeader(data io.Reader) error {
 	return nil
 }
 
-func (h *BatchTable) Read(reader io.ReadSeeker, header Header, batchLength int) error {
+func (h *BatchTable) Read(reader io.Reader, header Header, batchLength int) error {
 	if header.GetBatchTableJSONByteLength() <= 0 {
 		return nil
 	}

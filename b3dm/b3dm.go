@@ -1,6 +1,7 @@
 package b3dm
 
 import (
+	"bufio"
 	"encoding/binary"
 	"io"
 	"os"
@@ -94,11 +95,13 @@ func (m *B3dm) GetBatchTable() *BatchTable {
 }
 
 type B3dmReader struct {
-	rs io.ReadSeeker
+	rs *bufio.Reader
 }
 
-func NewB3dmReader(r io.ReadSeeker) *B3dmReader {
-	return &B3dmReader{rs: r}
+func NewB3dmReader(r io.Reader) *B3dmReader {
+	return &B3dmReader{
+		rs: bufio.NewReader(r),
+	}
 }
 
 func (r *B3dmReader) DecodeHeader(d *B3dmHeader) error {

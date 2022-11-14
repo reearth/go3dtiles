@@ -29,7 +29,7 @@ func (h *FeatureTable) GetBatchLength() int {
 	return 0
 }
 
-func (t *FeatureTable) readJSONHeader(data io.ReadSeeker, jsonLength int) error {
+func (t *FeatureTable) readJSONHeader(data io.Reader, jsonLength int) error {
 	jdata := make([]byte, jsonLength)
 	_, err := data.Read(jdata)
 	dec := json.NewDecoder(bytes.NewBuffer(jdata))
@@ -44,7 +44,7 @@ func (t *FeatureTable) readJSONHeader(data io.ReadSeeker, jsonLength int) error 
 	return nil
 }
 
-func (h *FeatureTable) readData(reader io.ReadSeeker, buffLength int) error {
+func (h *FeatureTable) readData(reader io.Reader, buffLength int) error {
 	if buffLength == 0 {
 		return nil
 	}
@@ -57,7 +57,7 @@ func (h *FeatureTable) readData(reader io.ReadSeeker, buffLength int) error {
 	return nil
 }
 
-func (h *FeatureTable) Read(reader io.ReadSeeker, header Header) error {
+func (h *FeatureTable) Read(reader io.Reader, header Header) error {
 	err := h.readJSONHeader(reader, int(header.GetFeatureTableJSONByteLength()))
 	if err != nil {
 		return errors.Wrap(err, "failed to read FeatureTable header")
