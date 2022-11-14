@@ -106,13 +106,15 @@ func NewB3dmReader(r io.Reader) *B3dmReader {
 
 func (r *B3dmReader) DecodeHeader(d *B3dmHeader) error {
 	if err := binary.Read(r.rs, littleEndian, d); err != nil {
-		return errors.Wrap(err, "open failed for b3dm file")
+		return errors.Wrap(err, "failed to read header")
 	}
 	return nil
 }
 
 func (r *B3dmReader) Decode(m *B3dm) error {
-	r.DecodeHeader(&m.Header)
+	if err := r.DecodeHeader(&m.Header); err != nil {
+		return errors.Wrap(err, "failed to decode header")
+	}
 
 	m.FeatureTable.decode = B3dmFeatureTableDecode
 
