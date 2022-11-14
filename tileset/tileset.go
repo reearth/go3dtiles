@@ -13,24 +13,24 @@ const (
 )
 
 type Tileset struct {
-	Asset             Asset                   `json:"asset"`
+	Asset             Asset                  `json:"asset"`
 	Properties        map[string]Schema      `json:"properties,omitempty"`
-	GeometricError    float64                 `json:"geometricError"`
-	Root              Tile                    `json:"root"`
-	ExtenstionsUsed   *[]string               `json:"extensionsUsed,omitempty"`
-	ExtensionRequired *[]string               `json:"extensionsRequired,omitempty"`
+	GeometricError    float64                `json:"geometricError"`
+	Root              Tile                   `json:"root"`
+	ExtenstionsUsed   *[]string              `json:"extensionsUsed,omitempty"`
+	ExtensionRequired *[]string              `json:"extensionsRequired,omitempty"`
 	Extentions        map[string]interface{} `json:"extensions,omitempty"`
 	Extras            interface{}            `json:"extras,omitempty"`
 }
 
 type Tile struct {
-	BoundingVolume      BoundingVolume          `json:"boundingVolume"`
-	ViewerRequestVolume *BoundingVolume         `josn:"viewerRequestVolume,omitempty"`
-	GeometricError      float64                 `json:"geometricError"`
+	BoundingVolume      BoundingVolume         `json:"boundingVolume"`
+	ViewerRequestVolume *BoundingVolume        `josn:"viewerRequestVolume,omitempty"`
+	GeometricError      float64                `json:"geometricError"`
 	Refine              string                 `json:"refine,omitempty"`
-	Transform           *[16]float64            `json:"transform,omitempty"`
-	Content             *Content                `json:"content,omitempty"`
-	Children            *[]Tile                 `json:"children,omitempty"`
+	Transform           *[16]float64           `json:"transform,omitempty"`
+	Content             *Content               `json:"content,omitempty"`
+	Children            *[]Tile                `json:"children,omitempty"`
 	Extentions          map[string]interface{} `json:"extensions,omitempty"`
 	Extras              interface{}            `json:"extras,omitempty"`
 }
@@ -44,9 +44,9 @@ type Content struct {
 }
 
 type BoundingVolume struct {
-	Box        *[12]float64            `json:"box,omitempty"`
-	Region     *[6]float64             `json:"region,omitempty"`
-	Sphere     *[4]float64             `json:"sphere,omitempty"`
+	Box        *[12]float64           `json:"box,omitempty"`
+	Region     *[6]float64            `json:"region,omitempty"`
+	Sphere     *[4]float64            `json:"sphere,omitempty"`
 	Extentions map[string]interface{} `json:"extension,omitempty"`
 	Extras     interface{}            `json:"extras,omitempty"`
 }
@@ -57,9 +57,9 @@ type Schema struct {
 }
 
 type Asset struct {
-	Version        string                  `json:"version"`
-	TilesetVersion string                  `json:"tileSetVersion,omitempty"`
-	GltfUpAxis     string                  `json:"gltfUpAxis,omitempty"`
+	Version        string                 `json:"version"`
+	TilesetVersion string                 `json:"tileSetVersion,omitempty"`
+	GltfUpAxis     string                 `json:"gltfUpAxis,omitempty"`
 	Extentions     map[string]interface{} `json:"extensions,omitempty"`
 	Extras         interface{}            `json:"extras,omitempty"`
 }
