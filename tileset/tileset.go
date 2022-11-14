@@ -7,6 +7,11 @@ import (
 	"github.com/pkg/errors"
 )
 
+const (
+	TILE_REFINE_ADD     = "ADD"
+	TILE_REFINE_REPLACE = "REPLACE"
+)
+
 type Tileset struct {
 	Asset             Asset                   `json:"asset"`
 	Properties        map[string]Schema      `json:"properties,omitempty"`
