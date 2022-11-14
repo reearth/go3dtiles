@@ -129,7 +129,7 @@ func TestB3dm_Decode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if err := tt.d.Decode(tt.args.b3dm); (err != nil) != tt.wantErr {
-				t.Errorf("%v: Decoder.Decode() error = %v, wantErr %v", tt.name, err, tt.wantErr)
+				t.Errorf("Decoder.Decode() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
