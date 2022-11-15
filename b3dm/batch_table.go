@@ -17,7 +17,7 @@ func (t *BatchTable) readJSONHeader(data io.Reader) error {
 	t.Header = make(map[string]interface{})
 	dec := json.NewDecoder(data)
 	if err := dec.Decode(&t.Header); err != nil {
-		return err
+		return errors.Wrap(err, "faied to decode the header")
 	}
 	t.Header = transformBinaryBodyReference(t.Header)
 	return nil
