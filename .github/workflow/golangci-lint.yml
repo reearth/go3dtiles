@@ -8,8 +8,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  golangci:
-    name: lint
+  ci:
+    name: ci
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-go@v3
