@@ -127,3 +127,91 @@ func TestOpen(t *testing.T) {
 		})
 	}
 }
+
+func TestUri(t *testing.T) {
+	tests := []struct {
+		name    string
+		tile	*Tile
+		want    string
+		wantErr bool
+	}{
+		{"openError", &Tile{} ,"", true},
+		{"uri", &Tile{
+			BoundingVolume: BoundingVolume{
+				Region: &[6]float64{
+					-1.3197209591796106, 0.6988424218,
+					-1.3196390408203893, 0.6989055782,
+					0, 88,
+				},
+			},
+			GeometricError: float64(70),
+			Refine:         TILE_REFINE_ADD,
+			Content: &Content{
+				BoundingVolume: BoundingVolume{
+					Region: &[6]float64{
+						-1.3197004795898053, 0.6988582109,
+						-1.3196595204101946, 0.6988897891,
+						0, 88,
+					},
+				},
+				URI: "parent.b3dm",
+			},
+			Children: &[]Tile{},
+		}, "parent.b3dm", false},
+		{"url", &Tile{
+			BoundingVolume: BoundingVolume{
+				Region: &[6]float64{
+					-1.3197209591796106, 0.6988424218,
+					-1.3196390408203893, 0.6989055782,
+					0, 88,
+				},
+			},
+			GeometricError: float64(70),
+			Refine:         TILE_REFINE_ADD,
+			Content: &Content{
+				BoundingVolume: BoundingVolume{
+					Region: &[6]float64{
+						-1.3197004795898053, 0.6988582109,
+						-1.3196595204101946, 0.6988897891,
+						0, 88,
+					},
+				},
+				URL: "parent.b3dm",
+			},
+			Children: &[]Tile{},
+		}, "parent.b3dm", false},
+		{"neither_url_nor_uri", &Tile{
+			BoundingVolume: BoundingVolume{
+				Region: &[6]float64{
+					-1.3197209591796106, 0.6988424218,
+					-1.3196390408203893, 0.6989055782,
+					0, 88,
+				},
+			},
+			GeometricError: float64(70),
+			Refine:         TILE_REFINE_ADD,
+			Content: &Content{
+				BoundingVolume: BoundingVolume{
+					Region: &[6]float64{
+						-1.3197004795898053, 0.6988582109,
+						-1.3196595204101946, 0.6988897891,
+						0, 88,
+					},
+				},
+			},
+			Children: &[]Tile{},
+		}, "", true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := tt.tile.Uri()
+			if (err != nil) != tt.wantErr {
+				t.Errorf("Open() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			assert.Equal(t, got, tt.want, "Open() = False")
+		})
+	}
+}

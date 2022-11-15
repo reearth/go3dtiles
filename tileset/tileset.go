@@ -70,6 +70,21 @@ type TilesetReader struct {
 	rs *bufio.Reader
 }
 
+func (t *Tile) Uri() (string, error) {
+	content := t.Content
+	if content != nil {
+		if content.URI != "" {
+			return content.URI, nil
+		}
+		if content.URL != "" {
+			return content.URL, nil
+		} else {
+			return "", errors.New("neither URL nor URI exists for this content")
+		}
+	}
+	return "", errors.New("content does not exist")
+}
+
 func NewTilsetReader(r io.Reader) *TilesetReader {
 	return &TilesetReader{
 		rs: bufio.NewReader(r),
