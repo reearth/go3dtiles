@@ -1,12 +1,8 @@
 name: golangci-lint
 on:
   push:
-    tags:
-      - v*
     branches:
-      - master
       - main
-      - release
   pull_request:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
