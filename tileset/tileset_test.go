@@ -57,7 +57,7 @@ func TestOpen(t *testing.T) {
 							0, 88,
 						},
 					},
-					URL: "",
+					URI: "parent.b3dm",
 				},
 				Children: &[]Tile{
 					{
@@ -68,7 +68,7 @@ func TestOpen(t *testing.T) {
 						},
 						GeometricError: float64(0),
 						Content: &Content{
-							URL: "",
+							URI: "ll.b3dm",
 						},
 					},
 					{
@@ -79,7 +79,7 @@ func TestOpen(t *testing.T) {
 						},
 						GeometricError: float64(0),
 						Content: &Content{
-							URL: "",
+							URI: "lr.b3dm",
 						},
 						Extras: map[string]interface{}{
 							"id": "Special Tile",
@@ -93,7 +93,7 @@ func TestOpen(t *testing.T) {
 						},
 						GeometricError: float64(0),
 						Content: &Content{
-							URL: "",
+							URI: "ur.b3dm",
 						},
 					},
 					{
@@ -104,7 +104,7 @@ func TestOpen(t *testing.T) {
 						},
 						GeometricError: float64(0),
 						Content: &Content{
-							URL: "",
+							URI: "ul.b3dm",
 						},
 					},
 				},
