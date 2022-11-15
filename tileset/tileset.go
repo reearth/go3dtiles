@@ -38,11 +38,11 @@ type Tile struct {
 }
 
 type Content struct {
-	BoundingVolume BoundingVolume `json:"boundingVolume,omitempty"`
-	// change it to "uri" https://github.com/CesiumGS/3d-tiles/tree/main/specification#content
-	URL        string                  `json:"url"`
-	Extentions *map[string]interface{} `json:"extension,omitempty"`
-	Extras     *interface{}            `json:"extras,omitempty"`
+	BoundingVolume BoundingVolume          `json:"boundingVolume,omitempty"`
+	URL            string                  `json:"url,omitempty"`
+	URI            string                  `json:"uri,omitempty"`
+	Extentions     *map[string]interface{} `json:"extension,omitempty"`
+	Extras         *interface{}            `json:"extras,omitempty"`
 }
 
 type BoundingVolume struct {
