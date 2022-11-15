@@ -21,3 +21,9 @@ jobs:
         with:
           version: latest          
           args: --timeout=10m
+      - name: test
+        run: go test ./... -v -race -coverprofile=coverage.txt -covermode=atomic
+      - name: codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: coverage.txt
