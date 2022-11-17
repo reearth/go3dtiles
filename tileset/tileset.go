@@ -80,7 +80,7 @@ func (t *Tile) Uri() (string, error) {
 			return "", errors.New("neither URL nor URI exists for this content")
 		}
 	}
-	return "", errors.New("content doerrors not exist")
+	return "", errors.New("content does not exist")
 }
 
 func NewTilsetReader(r io.Reader) *TilesetReader {
