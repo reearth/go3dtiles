@@ -2,8 +2,10 @@ package tileset
 
 import (
 	"testing"
+	"errors"
 
 	"github.com/stretchr/testify/assert"
+	// e"github.com/pkg/errors"
 )
 
 const TESTFILE_TILESET = "testdata/tileset.json"
@@ -124,6 +126,98 @@ func TestOpen(t *testing.T) {
 			}
 
 			assert.Equal(t, got, tt.want, "Open() = False")
+		})
+	}
+}
+
+func TestUri(t *testing.T) {
+	tests := []struct {
+		name          string
+		tile          *Tile
+		want          string
+		expectedError error
+		wantErr       bool
+	}{
+		{"openError", &Tile{}, "", errors.New("content does not exist"), true},
+		{"uri", &Tile{
+			BoundingVolume: BoundingVolume{
+				Region: &[6]float64{
+					-1.3197209591796106, 0.6988424218,
+					-1.3196390408203893, 0.6989055782,
+					0, 88,
+				},
+			},
+			GeometricError: float64(70),
+			Refine:         TILE_REFINE_ADD,
+			Content: &Content{
+				BoundingVolume: BoundingVolume{
+					Region: &[6]float64{
+						-1.3197004795898053, 0.6988582109,
+						-1.3196595204101946, 0.6988897891,
+						0, 88,
+					},
+				},
+				URI: "parent.b3dm",
+			},
+			Children: &[]Tile{},
+		}, "parent.b3dm", nil, false},
+		{"url", &Tile{
+			BoundingVolume: BoundingVolume{
+				Region: &[6]float64{
+					-1.3197209591796106, 0.6988424218,
+					-1.3196390408203893, 0.6989055782,
+					0, 88,
+				},
+			},
+			GeometricError: float64(70),
+			Refine:         TILE_REFINE_ADD,
+			Content: &Content{
+				BoundingVolume: BoundingVolume{
+					Region: &[6]float64{
+						-1.3197004795898053, 0.6988582109,
+						-1.3196595204101946, 0.6988897891,
+						0, 88,
+					},
+				},
+				URL: "parent.b3dm",
+			},
+			Children: &[]Tile{},
+		}, "parent.b3dm", nil, false},
+		{"neither_url_nor_uri", &Tile{
+			BoundingVolume: BoundingVolume{
+				Region: &[6]float64{
+					-1.3197209591796106, 0.6988424218,
+					-1.3196390408203893, 0.6989055782,
+					0, 88,
+				},
+			},
+			GeometricError: float64(70),
+			Refine:         TILE_REFINE_ADD,
+			Content: &Content{
+				BoundingVolume: BoundingVolume{
+					Region: &[6]float64{
+						-1.3197004795898053, 0.6988582109,
+						-1.3196595204101946, 0.6988897891,
+						0, 88,
+					},
+				},
+			},
+			Children: &[]Tile{},
+		}, "", errors.New("neither URL nor URI exists for this content"), true},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := tt.tile.Uri()
+			if tt.wantErr {
+				if assert.Error(t, err) {
+					assert.Equal(t, err, tt.expectedError, "Expected an error")
+				}
+			} else {
+				if assert.NoError(t, err) {
+					assert.Equal(t, got, tt.want, "Uri() = false")
+				}
+			}
 		})
 	}
 }

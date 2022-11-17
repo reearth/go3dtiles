@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	es"errors"
 
 	"github.com/pkg/errors"
 )
@@ -67,6 +68,21 @@ type Asset struct {
 
 type TilesetReader struct {
 	rs io.Reader
+}
+
+func (t *Tile) Uri() (string, error) {
+	content := t.Content
+	if content != nil {
+		if content.URI != "" {
+			return content.URI, nil
+		}
+		if content.URL != "" {
+			return content.URL, nil
+		} else {
+			return "", es.New("neither URL nor URI exists for this content")
+		}
+	}
+	return "", es.New("content does not exist")
 }
 
 func NewTilsetReader(r io.Reader) *TilesetReader {
