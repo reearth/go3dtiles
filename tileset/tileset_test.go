@@ -206,12 +206,14 @@ func TestUri(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := tt.tile.Uri()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Open() error = %v, wantErr %v", err, tt.wantErr)
+			if tt.wantErr {
+				assert.NoError(t, err)
+			} else {
+				assert.Error(t, err)
 				return
 			}
 
-			assert.Equal(t, got, tt.want, "Open() = False")
+			assert.Equal(t, got, tt.want, "Uri() = False")
 		})
 	}
 }
