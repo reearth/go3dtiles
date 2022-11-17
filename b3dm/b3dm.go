@@ -2,10 +2,10 @@ package b3dm
 
 import (
 	"encoding/binary"
+	"errors"
 	"io"
 	"os"
 
-	"github.com/pkg/errors"
 	"github.com/qmuntal/gltf"
 )
 
@@ -60,7 +60,6 @@ type B3dm struct {
 	Model        *gltf.Document
 }
 
-
 func B3dmFeatureTableDecode(header map[string]interface{}, buff []byte) map[string]interface{} {
 	ret := make(map[string]interface{})
 	l := getIntegerScalarFeatureValue(header, buff, B3DM_PROP_BATCH_LENGTH)
@@ -104,29 +103,29 @@ func NewB3dmReader(r io.Reader) *B3dmReader {
 
 func (r *B3dmReader) DecodeHeader(d *B3dmHeader) error {
 	if err := binary.Read(r.rs, littleEndian, d); err != nil {
-		return errors.Wrap(err, "failed to read header")
+		return errors.New("failed to read header")
 	}
 	return nil
 }
 
 func (r *B3dmReader) Decode(m *B3dm) error {
 	if err := r.DecodeHeader(&m.Header); err != nil {
-		return errors.Wrap(err, "failed to decode header")
+		return errors.New("failed to decode header")
 	}
 
 	m.FeatureTable.decode = B3dmFeatureTableDecode
 
 	if err := m.FeatureTable.Read(r.rs, m.GetHeader()); err != nil {
-		return errors.Wrap(err, "failed to read FeatureTable")
+		return errors.New("failed to read FeatureTable")
 	}
 
 	if err := m.BatchTable.Read(r.rs, m.GetHeader(), m.FeatureTable.GetBatchLength()); err != nil {
-		return errors.Wrap(err, "failed to read BatchTable")
+		return errors.New("failed to read BatchTable")
 	}
 
 	var err1 error
 	if m.Model, err1 = loadGltfFromByte(r.rs); err1 != nil {
-		return errors.Wrap(err1, "failed to load glTF file")
+		return errors.New( "failed to load glTF file")
 	}
 
 	return nil
@@ -136,13 +135,13 @@ func (r *B3dmReader) Decode(m *B3dm) error {
 func Open(fileName string) (*B3dm, error) {
 	f, err := os.Open(fileName)
 	if err != nil {
-		return nil, errors.Wrap(err, "open failed")
+		return nil, errors.New("open failed")
 	}
 	defer f.Close()
 	b3dmReader := NewB3dmReader(f)
 	b3d := new(B3dm)
 	if err := b3dmReader.Decode(b3d); err != nil {
-		return nil, errors.Wrap(err, "failed to decode the b3dm file")
+		return nil, errors.New("failed to decode the b3dm file")
 	}
 	return b3d, nil
 }

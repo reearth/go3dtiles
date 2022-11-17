@@ -3,9 +3,8 @@ package b3dm
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io"
-
-	"github.com/pkg/errors"
 )
 
 type BatchTable struct {
@@ -37,17 +36,17 @@ func (h *BatchTable) Read(reader io.Reader, header Header, batchLength int) erro
 
 	jsonb := make([]byte, jsonLen)
 	if _, err := reader.Read(jsonb); err != nil {
-		return errors.Wrap(err, "failed to read json file")
+		return errors.New("failed to read json file")
 	}
 
 	jsonr := bytes.NewReader(jsonb)
 	if err := h.readJSONHeader(jsonr); err != nil {
-		return errors.Wrap(err, "failed to read jsonHeader file")
+		return errors.New("failed to read jsonHeader file")
 	}
 
 	batchdata := make([]byte, header.GetBatchTableBinaryByteLength())
 	if _, err := reader.Read(batchdata); err != nil {
-		return errors.Wrap(err, "failed to read batchdata")
+		return errors.New("failed to read batchdata")
 	}
 	h.Data = make(map[string]interface{})
 	for k, v := range h.Header {
