@@ -9,83 +9,89 @@ var (
 	littleEndian = binary.LittleEndian
 )
 
-func getBatchTableValuesFromRef(ref *BinaryBodyReference, buff []byte, propName string, batchLength int) interface{} {
+type BatchTableValuesEntry []interface{}
+
+func getBatchTableValuesFromRef(ref *BinaryBodyReference, buff []byte, propName string, batchLength int) []interface{} {
 	if ref != nil {
+		result := BatchTableValuesEntry{}
 		offset := int(ref.ByteOffset)
 		containerSize := ContainerTypeSize(ref.ContainerType)
+		componentByteSize := ComponentTypeSize(ref.ComponentType)
 		switch ref.ComponentType {
 		case COMPONENT_TYPE_BYTE:
-			if containerSize == 1 {
-				return buff[offset+batchLength]
+			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
+				if containerSize == 1 {
+					result = append(result, buff[offset+i])
+				} else {
+					result = append(result, buff[offset+batchLength*containerSize:offset+(batchLength+1)*containerSize])
+				}
 			}
-			return buff[offset+batchLength*containerSize : offset+(batchLength+1)*containerSize]
+			return result
 		case COMPONENT_TYPE_UNSIGNED_BYTE:
-			if containerSize == 1 {
-				return uint8(buff[offset+batchLength])
+			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
+				out := make([]uint8, containerSize)
+				for j := 0; j < containerSize; j++ {
+					out[j] = uint8(buff[offset+i*containerSize+j])
+					result = append(result, out[j])
+				}
 			}
-			out := make([]uint8, containerSize)
-			for i := 0; i < containerSize; i++ {
-				out[i] = uint8(buff[offset+batchLength*containerSize+i])
-			}
-			return out
+			return result
 		case COMPONENT_TYPE_SHORT:
-			if containerSize == 1 {
-				return int16(littleEndian.Uint16(buff[offset+batchLength : offset+batchLength+2]))
+			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
+				out := make([]int16, containerSize)
+				for j := 0; j < containerSize; j++ {
+					out[j] = int16(littleEndian.Uint16(buff[offset+i*containerSize+j : offset+i*containerSize+j+2]))
+					result = append(result, out[j])
+				}
 			}
-			out := make([]int16, containerSize)
-			for i := 0; i < containerSize; i++ {
-				out[i] = int16(littleEndian.Uint16(buff[offset+batchLength*containerSize+i : offset+batchLength*containerSize+i+2]))
-			}
-			return out
+			return result
 		case COMPONENT_TYPE_UNSIGNED_SHORT:
-			if containerSize == 1 {
-				return littleEndian.Uint16(buff[offset+batchLength : offset+batchLength+2])
+			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
+				out := make([]uint16, containerSize)
+				for j := 0; j < containerSize; j++ {
+					out[j] = littleEndian.Uint16(buff[offset+i*containerSize+j : offset+i*containerSize+j+2])
+					result = append(result, out[j])
+				}
 			}
-			out := make([]uint16, containerSize)
-			for i := 0; i < containerSize; i++ {
-				out[i] = littleEndian.Uint16(buff[offset+batchLength*containerSize+i : offset+batchLength*containerSize+i+2])
-			}
-			return out
+			return result
 		case COMPONENT_TYPE_INT:
-			if containerSize == 1 {
-				return int32(littleEndian.Uint32(buff[offset+batchLength : offset+batchLength+4]))
+			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
+				out := make([]int32, containerSize)
+				for j := 0; j < containerSize; j++ {
+					out[j] = int32(littleEndian.Uint32(buff[offset+i*containerSize+j : offset+i*containerSize+j+4]))
+					result = append(result, out[j])
+				}
 			}
-			out := make([]int32, containerSize)
-			for i := 0; i < containerSize; i++ {
-				out[i] = int32(littleEndian.Uint32(buff[offset+batchLength*containerSize+i : offset+batchLength*containerSize+i+4]))
-			}
-			return out
+			return result
 		case COMPONENT_TYPE_UNSIGNED_INT:
-			if containerSize == 1 {
-				return littleEndian.Uint32(buff[offset+batchLength : offset+batchLength+4])
+			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
+				out := make([]uint32, containerSize)
+				for j := 0; j < containerSize; j++ {
+					out[j] = littleEndian.Uint32(buff[offset+i*containerSize+j : offset+i*containerSize+j+4])
+					result = append(result, out[j])
+				}
 			}
-			out := make([]uint32, containerSize)
-			for i := 0; i < containerSize; i++ {
-				out[i] = littleEndian.Uint32(buff[offset+batchLength*containerSize+i : offset+batchLength*containerSize+i+4])
-			}
-			return out
+			return result
 		case COMPONENT_TYPE_FLOAT:
-			if containerSize == 1 {
-				i := littleEndian.Uint32(buff[offset+batchLength : offset+batchLength+4])
-				return math.Float32frombits(i)
+			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
+				out := make([]float32, containerSize)
+				for j := 0; j < containerSize; j++ {
+					inte := littleEndian.Uint32(buff[offset+i*containerSize+j : offset+i*containerSize+j+4])
+					out[j] = math.Float32frombits(inte)
+					result = append(result, out[j])
+				}
 			}
-			out := make([]float32, containerSize)
-			for i := 0; i < containerSize; i++ {
-				inte := littleEndian.Uint32(buff[offset+batchLength*containerSize+i : offset+batchLength*containerSize+i+4])
-				out[i] = math.Float32frombits(inte)
-			}
-			return out
+			return result
 		case COMPONENT_TYPE_DOUBLE:
-			if containerSize == 1 {
-				i := littleEndian.Uint64(buff[offset+batchLength : offset+batchLength+8])
-				return math.Float64frombits(i)
+			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
+				out := make([]float64, containerSize)
+				for j := 0; j < containerSize; j++ {
+					inte := littleEndian.Uint64(buff[offset+i*containerSize+j : offset+i*containerSize+j+8])
+					out[j] = math.Float64frombits(inte)
+					result = append(result, out[j])
+				}
 			}
-			out := make([]float64, containerSize)
-			for i := 0; i < containerSize; i++ {
-				inte := littleEndian.Uint64(buff[offset+batchLength*containerSize+i : offset+batchLength*containerSize+i+8])
-				out[i] = math.Float64frombits(inte)
-			}
-			return out
+			return result
 		}
 	}
 	return nil

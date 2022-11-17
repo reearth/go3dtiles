@@ -39,6 +39,29 @@ func ContainerTypeSize(tp string) int {
 	}
 }
 
+func ComponentTypeSize(tp string) int {
+	switch tp {
+	case COMPONENT_TYPE_BYTE:
+		return 1
+	case COMPONENT_TYPE_UNSIGNED_BYTE:
+		return 1
+	case COMPONENT_TYPE_SHORT:
+		return 2
+	case COMPONENT_TYPE_UNSIGNED_SHORT:
+		return 2
+	case COMPONENT_TYPE_INT:
+		return 4
+	case COMPONENT_TYPE_UNSIGNED_INT:
+		return 4
+	case COMPONENT_TYPE_FLOAT:
+		return 4
+	case COMPONENT_TYPE_DOUBLE:
+		return 8
+	default:
+		return 0
+	}
+}
+
 type BinaryBodyReference struct {
 	ByteOffset    uint32 `json:"byteOffset"`
 	ComponentType string `json:"componentType,omitempty"`
