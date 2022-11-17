@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	es"errors"
 
 	"github.com/pkg/errors"
 )
@@ -79,10 +80,10 @@ func (t *Tile) Uri() (string, error) {
 		if content.URL != "" {
 			return content.URL, nil
 		} else {
-			return "", errors.New("neither URL nor URI exists for this content")
+			return "", es.New("neither URL nor URI exists for this content")
 		}
 	}
-	return "", errors.New("content does not exist")
+	return "", es.New("content does not exist")
 }
 
 func NewTilsetReader(r io.Reader) *TilesetReader {
