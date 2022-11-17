@@ -94,6 +94,10 @@ func (m *B3dm) GetBatchTable() *BatchTable {
 	return &m.BatchTable
 }
 
+func (m *B3dm) GetModel() *gltf.Document {
+	return m.Model
+}
+
 type B3dmReader struct {
 	rs io.Reader
 }
