@@ -1,7 +1,6 @@
 package tileset
 
 import (
-	"bufio"
 	"encoding/json"
 	"io"
 	"os"
@@ -67,13 +66,11 @@ type Asset struct {
 }
 
 type TilesetReader struct {
-	rs *bufio.Reader
+	rs io.Reader
 }
 
 func NewTilsetReader(r io.Reader) *TilesetReader {
-	return &TilesetReader{
-		rs: bufio.NewReader(r),
-	}
+	return &TilesetReader{rs: r}
 }
 
 func (r *TilesetReader) Decode(ts *Tileset) error {

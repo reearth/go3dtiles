@@ -1,7 +1,6 @@
 package b3dm
 
 import (
-	"bufio"
 	"encoding/binary"
 	"io"
 	"os"
@@ -61,6 +60,7 @@ type B3dm struct {
 	Model        *gltf.Document
 }
 
+
 func B3dmFeatureTableDecode(header map[string]interface{}, buff []byte) map[string]interface{} {
 	ret := make(map[string]interface{})
 	l := getIntegerScalarFeatureValue(header, buff, B3DM_PROP_BATCH_LENGTH)
@@ -95,13 +95,11 @@ func (m *B3dm) GetBatchTable() *BatchTable {
 }
 
 type B3dmReader struct {
-	rs *bufio.Reader
+	rs io.Reader
 }
 
 func NewB3dmReader(r io.Reader) *B3dmReader {
-	return &B3dmReader{
-		rs: bufio.NewReader(r),
-	}
+	return &B3dmReader{rs: r}
 }
 
 func (r *B3dmReader) DecodeHeader(d *B3dmHeader) error {
