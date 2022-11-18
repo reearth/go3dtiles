@@ -40,7 +40,7 @@ func getBatchTableValuesFromRef(ref *BinaryBodyReference, buff []byte, propName 
 			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
 				out := make([]int16, containerSize)
 				for j := 0; j < containerSize; j++ {
-					out[j] = int16(littleEndian.Uint16(buff[offset+i*containerSize+j : offset+i*containerSize+j+2]))
+					out[j] = int16(littleEndian.Uint16(buff[offset+i*containerSize+j : offset+i*containerSize+j+componentByteSize]))
 					result = append(result, out[j])
 				}
 			}
@@ -49,7 +49,7 @@ func getBatchTableValuesFromRef(ref *BinaryBodyReference, buff []byte, propName 
 			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
 				out := make([]uint16, containerSize)
 				for j := 0; j < containerSize; j++ {
-					out[j] = littleEndian.Uint16(buff[offset+i*containerSize+j : offset+i*containerSize+j+2])
+					out[j] = littleEndian.Uint16(buff[offset+i*containerSize+j : offset+i*containerSize+j+componentByteSize])
 					result = append(result, out[j])
 				}
 			}
@@ -58,7 +58,7 @@ func getBatchTableValuesFromRef(ref *BinaryBodyReference, buff []byte, propName 
 			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
 				out := make([]int32, containerSize)
 				for j := 0; j < containerSize; j++ {
-					out[j] = int32(littleEndian.Uint32(buff[offset+i*containerSize+j : offset+i*containerSize+j+4]))
+					out[j] = int32(littleEndian.Uint32(buff[offset+i*containerSize+j : offset+i*containerSize+j+componentByteSize]))
 					result = append(result, out[j])
 				}
 			}
@@ -67,7 +67,7 @@ func getBatchTableValuesFromRef(ref *BinaryBodyReference, buff []byte, propName 
 			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
 				out := make([]uint32, containerSize)
 				for j := 0; j < containerSize; j++ {
-					out[j] = littleEndian.Uint32(buff[offset+i*containerSize+j : offset+i*containerSize+j+4])
+					out[j] = littleEndian.Uint32(buff[offset+i*containerSize+j : offset+i*containerSize+j+componentByteSize])
 					result = append(result, out[j])
 				}
 			}
@@ -76,7 +76,7 @@ func getBatchTableValuesFromRef(ref *BinaryBodyReference, buff []byte, propName 
 			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
 				out := make([]float32, containerSize)
 				for j := 0; j < containerSize; j++ {
-					inte := littleEndian.Uint32(buff[offset+i*containerSize+j : offset+i*containerSize+j+4])
+					inte := littleEndian.Uint32(buff[offset+i*containerSize+j : offset+i*containerSize+j+componentByteSize])
 					out[j] = math.Float32frombits(inte)
 					result = append(result, out[j])
 				}
@@ -86,7 +86,7 @@ func getBatchTableValuesFromRef(ref *BinaryBodyReference, buff []byte, propName 
 			for i := 0; i < batchLength*componentByteSize; i += componentByteSize {
 				out := make([]float64, containerSize)
 				for j := 0; j < containerSize; j++ {
-					inte := littleEndian.Uint64(buff[offset+i*containerSize+j : offset+i*containerSize+j+8])
+					inte := littleEndian.Uint64(buff[offset+i*containerSize+j : offset+i*containerSize+j+componentByteSize])
 					out[j] = math.Float64frombits(inte)
 					result = append(result, out[j])
 				}
