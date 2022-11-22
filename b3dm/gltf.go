@@ -17,6 +17,7 @@ func loadGltfFromByte(reader io.Reader) (*gltf.Document, error) {
 	return doc, nil
 }
 
+// Get the nth value in the buffer described by an accessor with accessorId
 func getGltfBufferForValueAt(gltf *gltf.Document, accesorId, n uint32) []byte {
 	accessor := gltf.Accessors[accesorId]
 	bufferView := gltf.BufferViews[*accessor.BufferView]
