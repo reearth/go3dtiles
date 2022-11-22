@@ -3,7 +3,7 @@ package b3dm
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io"
 )
 
@@ -37,7 +37,7 @@ func (t *FeatureTable) readJSONHeader(data io.Reader, jsonLength int) error {
 	}
 	t.Header = make(map[string]interface{})
 	if err := dec.Decode(&t.Header); err != nil {
-		return errors.New("failed to decode the json file")
+		return fmt.Errorf("failed to decode the json file: %v", err)
 	}
 	t.Header = transformBinaryBodyReference(t.Header)
 	return nil
@@ -50,7 +50,7 @@ func (h *FeatureTable) readData(reader io.Reader, buffLength int) error {
 	bdata := make([]byte, buffLength)
 	_, err := reader.Read(bdata)
 	if err != nil {
-		return errors.New("failed to read the binary data")
+		return fmt.Errorf("failed to read the binary data: %v", err)
 	}
 	h.Data = h.decode(h.Header, bdata)
 	return nil
@@ -59,11 +59,11 @@ func (h *FeatureTable) readData(reader io.Reader, buffLength int) error {
 func (h *FeatureTable) Read(reader io.Reader, header Header) error {
 	err := h.readJSONHeader(reader, int(header.GetFeatureTableJSONByteLength()))
 	if err != nil {
-		return errors.New("failed to read FeatureTable header")
+		return fmt.Errorf("failed to read FeatureTable header: %v", err)
 	}
 	err = h.readData(reader, int(header.GetFeatureTableBinaryByteLength()))
 	if err != nil {
-		return errors.New("failed to read FeatureTable Data")
+		return fmt.Errorf("failed to read FeatureTable Data: %v", err)
 	}
 	return nil
 }
