@@ -57,7 +57,7 @@ func readGltfComponent(buff []byte, componentType gltf.ComponentType, n uint32) 
 	}
 }
 
-func readGltfValueAt(gltf *gltf.Document, accesorId, n uint32) []interface{} {
+func ReadGltfValueAt(gltf *gltf.Document, accesorId, n uint32) []interface{} {
 	buffer := getGltfBufferForValueAt(gltf, accesorId, n)
 	accessor := gltf.Accessors[accesorId]
 	numOfComponents := accessor.Type.Components()
