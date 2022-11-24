@@ -60,7 +60,6 @@ type B3dm struct {
 	Model        *gltf.Document
 }
 
-
 func B3dmFeatureTableDecode(header map[string]interface{}, buff []byte) map[string]interface{} {
 	ret := make(map[string]interface{})
 	l := getIntegerScalarFeatureValue(header, buff, B3DM_PROP_BATCH_LENGTH)
@@ -73,13 +72,18 @@ func B3dmFeatureTableEncode(header map[string]interface{}, data map[string]inter
 	return nil
 }
 
-func (m *B3dm) GetFeatureTableView() B3dmFeatureTable {
+func (m *B3dm) GetFeatureTableView() *B3dmFeatureTable {
 	ret := B3dmFeatureTable{}
-	ret.BatchLength = m.FeatureTable.Header[B3DM_PROP_BATCH_LENGTH].(int)
+	ret.BatchLength = int(m.FeatureTable.Header[B3DM_PROP_BATCH_LENGTH].(float64))
 	if m.FeatureTable.Header[B3DM_PROP_RTC_CENTER] != nil {
-		ret.RtcCenter = m.FeatureTable.Header[B3DM_PROP_RTC_CENTER].([3]float64)
+		rtcCenterRaw := m.FeatureTable.Header[B3DM_PROP_RTC_CENTER].([]interface{})
+		rtcCenter := [3]float64{}
+		for i := range rtcCenterRaw {
+			rtcCenter[i] = rtcCenterRaw[i].(float64)
+		}
+		ret.RtcCenter = rtcCenter
 	}
-	return ret
+	return &ret
 }
 
 func (m *B3dm) GetHeader() Header {

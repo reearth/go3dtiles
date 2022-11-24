@@ -135,3 +135,33 @@ func TestB3dm_Decode(t *testing.T) {
 		})
 	}
 }
+
+func TestGetFeatureTableView(t *testing.T) {
+	tests := []struct {
+		name    string
+		want    *B3dmFeatureTable
+		wantErr bool
+	}{
+		{"openError", nil, true},
+		{TESTFILE_LL_B3DM, &B3dmFeatureTable{
+			BatchLength: 10,
+			RtcCenter: [3]float64{
+				1.2149145525041146e+06,
+				-4.736388031625768e+06,
+				4.0815480407588882e+06,
+			},
+		}, false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			b3dm, err := Open(tt.name)
+			if !tt.wantErr {
+				if assert.NoError(t, err) {
+					got := b3dm.GetFeatureTableView()
+					assert.Equal(t, got, tt.want, "getFeatureTableView() = false")
+				}
+			}
+		})
+	}
+}
