@@ -10,7 +10,7 @@ import (
 
 type BatchTable struct {
 	Header map[string]interface{}
-	Data   map[string]interface{}
+	Data   map[string][]interface{}
 }
 
 func (t *BatchTable) readJSONHeader(data io.Reader) error {
@@ -30,7 +30,7 @@ func (h *BatchTable) Read(reader io.Reader, header Header, batchLength int) erro
 	jsonLen := header.GetBatchTableJSONByteLength()
 
 	if jsonLen == 0 {
-		h.Data = make(map[string]interface{})
+		h.Data = make(map[string][]interface{})
 		h.Header = make(map[string]interface{})
 		return nil
 	}
@@ -49,7 +49,7 @@ func (h *BatchTable) Read(reader io.Reader, header Header, batchLength int) erro
 	if _, err := reader.Read(batchdata); err != nil {
 		return errors.Wrap(err, "failed to read batchdata")
 	}
-	h.Data = make(map[string]interface{})
+	h.Data = make(map[string][]interface{})
 	for k, v := range h.Header {
 		switch t := v.(type) {
 		case BinaryBodyReference:
