@@ -111,7 +111,7 @@ func NewB3dmReader(r io.Reader) *B3dmReader {
 }
 
 func (r *B3dmReader) DecodeHeader(d *B3dmHeader) error {
-	if err := binary.Read(r.rs, _littleEndian, d); err != nil {
+	if err := binary.Read(r.rs, littleEndian, d); err != nil {
 		return errors.Wrap(err, "failed to read header")
 	}
 	return nil
