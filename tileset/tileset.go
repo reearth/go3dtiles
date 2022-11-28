@@ -3,6 +3,7 @@ package tileset
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 )
@@ -89,7 +90,7 @@ func NewTilsetReader(r io.Reader) *TilesetReader {
 
 func (r *TilesetReader) Decode(ts *Tileset) error {
 	if err := json.NewDecoder(r.rs).Decode(&ts); err != nil {
-		return errors.New("failed to decode the JSON tilset data")
+		return fmt.Errorf("failed to decode the JSON tilset data: %v", err)
 	}
 	return nil
 }
@@ -97,7 +98,7 @@ func (r *TilesetReader) Decode(ts *Tileset) error {
 func (ts *Tileset) ToJson() (string, error) {
 	b, err := json.Marshal(ts)
 	if err != nil {
-		return "", errors.New("failed to marshal the tilset JSON")
+		return "", fmt.Errorf("failed to marshal the tilset JSON: %v", err)
 	}
 	return string(b), nil
 }
@@ -105,13 +106,13 @@ func (ts *Tileset) ToJson() (string, error) {
 func Open(fileName string) (*Tileset, error) {
 	f, err := os.Open(fileName)
 	if err != nil {
-		return nil, errors.New("open failed")
+		return nil, fmt.Errorf("open failed: %v", err)
 	}
 	defer f.Close()
 	tilsetReader := NewTilsetReader(f)
 	ts := new(Tileset)
 	if err := tilsetReader.Decode(ts); err != nil {
-		return nil, errors.New("failed to decode the tileset")
+		return nil, fmt.Errorf("failed to decode the tileset: %v", err)
 	}
 	return ts, nil
 }
