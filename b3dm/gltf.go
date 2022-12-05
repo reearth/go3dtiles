@@ -74,7 +74,7 @@ func ReadGltfValueAt(gltf *gltf.Document, accesorId, n uint32) []interface{} {
 func GetGltfAttribute(primitive *gltf.Primitive, doc *gltf.Document, name string) ([]interface{}, error) {
 	accessors := doc.Accessors
 	attributes := primitive.Attributes
-	if attributes == nil || len(attributes) == 0 {
+	if len(attributes) == 0 {
 		return nil, errors.New("no attributes found")
 	}
 	att, ok := attributes[name]
