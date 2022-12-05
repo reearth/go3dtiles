@@ -70,3 +70,23 @@ func ReadGltfValueAt(gltf *gltf.Document, accesorId, n uint32) []interface{} {
 
 	return valueComponents
 }
+
+func GetGltfAttribute(primitive *gltf.Primitive, doc *gltf.Document, name string) ([]interface{}, error) {
+	accessors := doc.Accessors
+	attributes := primitive.Attributes
+	if attributes == nil || len(attributes) == 0 {
+		return nil, errors.New("no attributes found")
+	}
+	att, ok := attributes[name]
+	if !ok {
+		return nil, errors.New("can't access attribute")
+	}
+	count := accessors[att].Count
+
+	var res []interface{}
+	for i := uint32(0); i < count; i++ {
+		res = append(res, ReadGltfValueAt(doc, att, i))
+	}
+
+	return res, nil
+}
