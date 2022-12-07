@@ -4,8 +4,8 @@ import (
 	"encoding/binary"
 	"io"
 	"os"
+	"fmt"
 
-	"github.com/pkg/errors"
 	"github.com/qmuntal/gltf"
 )
 
@@ -112,29 +112,29 @@ func NewB3dmReader(r io.Reader) *B3dmReader {
 
 func (r *B3dmReader) DecodeHeader(d *B3dmHeader) error {
 	if err := binary.Read(r.rs, littleEndian, d); err != nil {
-		return errors.Wrap(err, "failed to read header")
+		return fmt.Errorf("failed to read header: %w", err)
 	}
 	return nil
 }
 
 func (r *B3dmReader) Decode(m *B3dm) error {
 	if err := r.DecodeHeader(&m.Header); err != nil {
-		return errors.Wrap(err, "failed to decode header")
+		return fmt.Errorf("failed to decode header: %w", err)
 	}
 
 	m.FeatureTable.decode = B3dmFeatureTableDecode
 
 	if err := m.FeatureTable.Read(r.rs, m.GetHeader()); err != nil {
-		return errors.Wrap(err, "failed to read FeatureTable")
+		return fmt.Errorf("failed to read FeatureTable: %w", err)
 	}
 
 	if err := m.BatchTable.Read(r.rs, m.GetHeader(), m.FeatureTable.GetBatchLength()); err != nil {
-		return errors.Wrap(err, "failed to read BatchTable")
+		return fmt.Errorf("failed to read BatchTable: %w", err)
 	}
 
 	var err1 error
 	if m.Model, err1 = loadGltfFromByte(r.rs); err1 != nil {
-		return errors.Wrap(err1, "failed to load glTF file")
+		return fmt.Errorf( "failed to load glTF file: %w", err1)
 	}
 
 	return nil
@@ -144,13 +144,13 @@ func (r *B3dmReader) Decode(m *B3dm) error {
 func Open(fileName string) (*B3dm, error) {
 	f, err := os.Open(fileName)
 	if err != nil {
-		return nil, errors.Wrap(err, "open failed")
+		return nil, fmt.Errorf("open failed: %w", err)
 	}
 	defer f.Close()
 	b3dmReader := NewB3dmReader(f)
 	b3d := new(B3dm)
 	if err := b3dmReader.Decode(b3d); err != nil {
-		return nil, errors.Wrap(err, "failed to decode the b3dm file")
+		return nil, fmt.Errorf("failed to decode the b3dm file: %w", err)
 	}
 	return b3d, nil
 }

@@ -2,11 +2,10 @@ package tileset
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
 	"os"
-	es"errors"
-
-	"github.com/pkg/errors"
 )
 
 const (
@@ -79,10 +78,10 @@ func (t *Tile) Uri() (string, error) {
 		if content.URL != "" {
 			return content.URL, nil
 		} else {
-			return "", es.New("neither URL nor URI exists for this content")
+			return "", errors.New("neither URL nor URI exists for this content")
 		}
 	}
-	return "", es.New("content does not exist")
+	return "", errors.New("content does not exist")
 }
 
 func NewTilsetReader(r io.Reader) *TilesetReader {
@@ -91,26 +90,29 @@ func NewTilsetReader(r io.Reader) *TilesetReader {
 
 func (r *TilesetReader) Decode(ts *Tileset) error {
 	if err := json.NewDecoder(r.rs).Decode(&ts); err != nil {
-		return errors.Wrap(err, "failed to decode the JSON tilset data")
+		return fmt.Errorf("failed to decode the JSON tilset data: %v", err)
 	}
 	return nil
 }
 
 func (ts *Tileset) ToJson() (string, error) {
-	b, e := json.Marshal(ts)
-	return string(b), errors.Wrap(e, "failed to marshal the tilset JSON")
+	b, err := json.Marshal(ts)
+	if err != nil {
+		return "", fmt.Errorf("failed to marshal the tilset JSON: %v", err)
+	}
+	return string(b), nil
 }
 
 func Open(fileName string) (*Tileset, error) {
 	f, err := os.Open(fileName)
 	if err != nil {
-		return nil, errors.Wrap(err, "open failed")
+		return nil, fmt.Errorf("open failed: %v", err)
 	}
 	defer f.Close()
 	tilsetReader := NewTilsetReader(f)
 	ts := new(Tileset)
 	if err := tilsetReader.Decode(ts); err != nil {
-		return nil, errors.Wrap(err, "failed to decode the tileset")
+		return nil, fmt.Errorf("failed to decode the tileset: %v", err)
 	}
 	return ts, nil
 }

@@ -1,11 +1,10 @@
 package tileset
 
 import (
-	"testing"
 	"errors"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
-	// e"github.com/pkg/errors"
 )
 
 const TESTFILE_TILESET = "testdata/tileset.json"
