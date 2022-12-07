@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"errors"
 
 	"github.com/qmuntal/gltf"
 )
